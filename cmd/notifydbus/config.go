@@ -2,8 +2,8 @@ package main
 
 import "github.com/andrieee44/notifydbus/pkg"
 
-func newConfig() []notifydbus.Module {
-	return []notifydbus.Module{
+func config() []notifydbus.Notifier {
+	return []notifydbus.Notifier{
 		notifydbus.NewVol(),
 	}
 }
