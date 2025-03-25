@@ -80,6 +80,7 @@ func (notifier *pipeWire) Run() (Notification, error) {
 		case info = <-notifier.infoChan:
 			if info.Volume != notifier.info.Volume || info.Mute != notifier.info.Mute {
 				notifier.info = info
+				notifier.notif.data.Hints["value"] = dbus.MakeVariant(info.Volume)
 				notifier.notif.data.Body = fmt.Sprintf("Volume: %d%%, Mute: %t", info.Volume, info.Mute)
 
 				return notifier.notif, nil
