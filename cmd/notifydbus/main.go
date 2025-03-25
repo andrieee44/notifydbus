@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/andrieee44/notifydbus/pkg"
-)
+import "github.com/andrieee44/notifydbus/pkg"
 
 func main() {
 	var (

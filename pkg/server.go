@@ -1,8 +1,6 @@
 package notifydbus
 
-import (
-	"github.com/godbus/dbus/v5"
-)
+import "github.com/godbus/dbus/v5"
 
 type Server struct {
 	sysbus  *dbus.Conn
@@ -151,14 +149,12 @@ func notify(notifChan <-chan Notification, errChan chan<- error, signalChan <-ch
 				id = notifNames[name]
 			}
 
-			println("before:", id)
 			err = obj.Call("org.freedesktop.Notifications.Notify", 0, data.AppName, id, data.AppIcon, data.Summary, data.Body, data.Actions, data.Hints, data.ExpireTimeout).Store(&id)
 			if err != nil {
 				errChan <- err
 
 				return
 			}
-			println("after:", id)
 
 			notifs[id] = notif
 
