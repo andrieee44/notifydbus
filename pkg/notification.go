@@ -11,9 +11,9 @@ type Notification interface {
 }
 
 type NotificationData struct {
-	AppName, AppIcon, Summary, Body string
-	ReplacesID                      bool
 	Actions                         []string
+	AppName, AppIcon, Summary, Body string
 	Hints                           map[string]dbus.Variant
 	ExpireTimeout                   int32
+	ReplacesID                      bool
 }
