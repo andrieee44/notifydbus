@@ -1,4 +1,6 @@
 github.com/andrieee44/pwmon v0.0.0-20250326110300-7a83ea3c7b8a h1:wMYVomQeR/tzelzZXUF0bWR5P+eu1iBAnVg7YXQIeVg=
 github.com/andrieee44/pwmon v0.0.0-20250326110300-7a83ea3c7b8a/go.mod h1:vBCtEXtLHYsA9XM2pVQzwUXPICWrHLMyDbMfITbrcBM=
+github.com/andrieee44/pwmon v0.0.0-20250327110736-16e1071fb8d6 h1:tRWluoUpPR8AbCAFxZxiVeSWSlPECJkF1eDJGrWuhRU=
+github.com/andrieee44/pwmon v0.0.0-20250327110736-16e1071fb8d6/go.mod h1:vBCtEXtLHYsA9XM2pVQzwUXPICWrHLMyDbMfITbrcBM=
 github.com/godbus/dbus/v5 v5.1.0 h1:4KLkAxT3aOY8Li4FRJe/KvhoNFFxo0m6fNuFUO8QJUk=
 github.com/godbus/dbus/v5 v5.1.0/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
