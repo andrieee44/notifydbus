@@ -70,21 +70,15 @@ func (notifier *pipeWire) Init(_ []string) error {
 }
 
 func (notifier *pipeWire) Run() (Notification, error) {
-	var (
-		info *pwmon.Info
-		err  error
-	)
+	var err error
 
 	for {
 		select {
-		case info = <-notifier.infoChan:
-			if info.Volume != notifier.info.Volume || info.Mute != notifier.info.Mute {
-				notifier.info = info
-				notifier.notif.data.Hints["value"] = dbus.MakeVariant(info.Volume)
-				notifier.notif.data.Body = fmt.Sprintf("Volume: %d%%, Mute: %t", info.Volume, info.Mute)
+		case notifier.info = <-notifier.infoChan:
+			notifier.notif.data.Hints["value"] = dbus.MakeVariant(notifier.info.Volume)
+			notifier.notif.data.Body = fmt.Sprintf("Volume: %d%%, Mute: %t", notifier.info.Volume, notifier.info.Mute)
 
-				return notifier.notif, nil
-			}
+			return notifier.notif, nil
 		case err = <-notifier.errChan:
 			return nil, err
 		}

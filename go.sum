@@ -1,8 +1,4 @@
-github.com/andrieee44/pwmon v0.0.0-20250324122047-71b5c824976f h1:EJhvi7aEVUBjCAGa8mPDl2h/ZeG55c4NN0fA8HIV9Xw=
-github.com/andrieee44/pwmon v0.0.0-20250324122047-71b5c824976f/go.mod h1:vBCtEXtLHYsA9XM2pVQzwUXPICWrHLMyDbMfITbrcBM=
 github.com/andrieee44/pwmon v0.0.0-20250326110300-7a83ea3c7b8a h1:wMYVomQeR/tzelzZXUF0bWR5P+eu1iBAnVg7YXQIeVg=
 github.com/andrieee44/pwmon v0.0.0-20250326110300-7a83ea3c7b8a/go.mod h1:vBCtEXtLHYsA9XM2pVQzwUXPICWrHLMyDbMfITbrcBM=
 github.com/godbus/dbus/v5 v5.1.0 h1:4KLkAxT3aOY8Li4FRJe/KvhoNFFxo0m6fNuFUO8QJUk=
 github.com/godbus/dbus/v5 v5.1.0/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
-github.com/mafik/pulseaudio v0.0.0-20240327130323-384e01075e6e h1:y6jINFpNNS+IEizD6s9j35aKVNRsfsoEKN8IStRDQm0=
-github.com/mafik/pulseaudio v0.0.0-20240327130323-384e01075e6e/go.mod h1:dlpd1fnLAhI6g9tM/aCobgN/Yka1/SkHrBTfAgDdb9Q=
