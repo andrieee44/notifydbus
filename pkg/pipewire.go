@@ -72,16 +72,21 @@ func (notifier *pipeWire) Init(_ []string) error {
 func (notifier *pipeWire) Run() (Notification, error) {
 	var err error
 
-	for {
-		select {
-		case notifier.info = <-notifier.infoChan:
-			notifier.notif.data.Hints["value"] = dbus.MakeVariant(notifier.info.Volume)
-			notifier.notif.data.Body = fmt.Sprintf("Volume: %d%%, Mute: %t", notifier.info.Volume, notifier.info.Mute)
+	select {
+	case notifier.info = <-notifier.infoChan:
+		if notifier.info.Mute {
+			notifier.notif.data.Body = "󰝟 muted"
+			notifier.notif.data.Hints["value"] = dbus.MakeVariant(0)
 
 			return notifier.notif, nil
-		case err = <-notifier.errChan:
-			return nil, err
 		}
+
+		notifier.notif.data.Body = fmt.Sprintf("%s %d%%", icon([]string{"󰕿", "󰖀", "󰕾"}, 100, float64(notifier.info.Volume)), notifier.info.Volume)
+		notifier.notif.data.Hints["value"] = dbus.MakeVariant(notifier.info.Volume)
+
+		return notifier.notif, nil
+	case err = <-notifier.errChan:
+		return nil, err
 	}
 }
 
