@@ -7,7 +7,12 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
+type pipeWireOpts struct {
+	icons []string
+}
+
 type pipeWire struct {
+	opts     *pipeWireOpts
 	notif    *pipeWireNotif
 	infoChan <-chan *pwmon.Info
 	errChan  <-chan error
@@ -43,7 +48,7 @@ func (notifier *pipeWire) Init(_ []string) error {
 
 	notifier.notif = &pipeWireNotif{
 		data: &NotificationData{
-			AppName:       "PipeWire",
+			AppName:       "notifydbus",
 			Summary:       "Volume",
 			ReplacesID:    true,
 			ExpireTimeout: -1,
@@ -73,13 +78,13 @@ func (notifier *pipeWire) Run() (Notification, error) {
 	select {
 	case notifier.info = <-notifier.infoChan:
 		if notifier.info.Mute {
-			notifier.notif.data.Body = "󰝟 muted"
+			notifier.notif.data.Body = fmt.Sprintf("%s muted", notifier.opts.icons[0])
 			notifier.notif.data.Hints["value"] = dbus.MakeVariant(0)
 
 			return notifier.notif, nil
 		}
 
-		notifier.notif.data.Body = fmt.Sprintf("%s %d%%", icon([]string{"󰕿", "󰖀", "󰕾"}, 100, float64(notifier.info.Volume)), notifier.info.Volume)
+		notifier.notif.data.Body = fmt.Sprintf("%s %d%%", icon(notifier.opts.icons[1:], 100, float64(notifier.info.Volume)), notifier.info.Volume)
 		notifier.notif.data.Hints["value"] = dbus.MakeVariant(notifier.info.Volume)
 
 		return notifier.notif, nil
@@ -96,6 +101,8 @@ func (notifier *pipeWire) Close() error {
 	return nil
 }
 
-func NewPipeWire() *pipeWire {
-	return &pipeWire{}
+func NewPipeWire(icons []string) *pipeWire {
+	return &pipeWire{
+		opts: &pipeWireOpts{icons: icons},
+	}
 }

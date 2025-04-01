@@ -58,7 +58,7 @@ func (notifier *music) Init(_ []string) error {
 
 	notifier.notif = &musicNotif{
 		data: &NotificationData{
-			AppName:       "MPD",
+			AppName:       "notifydbus",
 			ReplacesID:    true,
 			ExpireTimeout: -1,
 
