@@ -6,6 +6,8 @@ github.com/andrieee44/pwmon v0.0.0-20250401084929-bc205bd87122 h1:Ws2euXacHnluze
 github.com/andrieee44/pwmon v0.0.0-20250401084929-bc205bd87122/go.mod h1:vBCtEXtLHYsA9XM2pVQzwUXPICWrHLMyDbMfITbrcBM=
 github.com/andrieee44/pwmon v0.0.0-20250401100852-aeccd1196635 h1:el+AvRYG7H95ULB8EhE232sCntdRMkjMEKeepTCGYPc=
 github.com/andrieee44/pwmon v0.0.0-20250401100852-aeccd1196635/go.mod h1:vBCtEXtLHYsA9XM2pVQzwUXPICWrHLMyDbMfITbrcBM=
+github.com/andrieee44/pwmon v0.0.0-20250402100532-217bb4627db0 h1:iqM8sTEnG/ehJhPalj9T6xKbxPdkPcEb9+X5l2ZjMlE=
+github.com/andrieee44/pwmon v0.0.0-20250402100532-217bb4627db0/go.mod h1:vBCtEXtLHYsA9XM2pVQzwUXPICWrHLMyDbMfITbrcBM=
 github.com/aws/aws-sdk-go v1.38.20/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
 github.com/aws/aws-sdk-go v1.55.6 h1:cSg4pvZ3m8dgYcgqB97MrcdjUmZ1BeMYKUxMMB89IPk=
 github.com/aws/aws-sdk-go v1.55.6/go.mod h1:eRwEWoyTWFMVYVQzKMNHWP5/RV4xIUGMQfXQHfHkpNU=
