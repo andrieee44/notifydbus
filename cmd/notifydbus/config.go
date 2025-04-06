@@ -10,7 +10,7 @@ func config() []notifydbus.Notifier {
 
 	return []notifydbus.Notifier{
 		notifydbus.NewPipeWire(volIcons),
-		notifydbus.NewMPD(),
+		notifydbus.NewMPD(volIcons, "%AlbumArtist% - %Track% - %Album% - %Title%"),
 		notifydbus.NewBrightness(briIcons),
 	}
 }

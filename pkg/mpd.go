@@ -2,8 +2,9 @@ package notifydbus
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 
 	"github.com/adrg/xdg"
 	"github.com/fhs/gompd/v2/mpd"
@@ -11,52 +12,87 @@ import (
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
 
-type music struct {
-	notif                              *musicNotif
-	watcher                            *mpd.Watcher
-	socketPath, summary, body, artPath string
+type musicOpts struct {
+	icons  []string
+	format string
 }
 
-type musicNotif struct {
+type music struct {
+	notif                      Notification
+	opts                       *musicOpts
+	player                     *musicPlayerNotif
+	mixer                      *musicMixerNotif
+	watcher                    *mpd.Watcher
+	socketPath, event, artPath string
+}
+
+type musicPlayerNotif struct {
 	data *NotificationData
 }
 
-func (notif *musicNotif) Name() string {
-	return "MPD"
+type musicMixerNotif struct {
+	data *NotificationData
 }
 
-func (notif *musicNotif) Closed(_ uint32) error {
+func (notif *musicPlayerNotif) Name() string {
+	return "MPD Player"
+}
+
+func (notif *musicPlayerNotif) Closed(_ uint32) error {
 	return nil
 }
 
-func (notif *musicNotif) ActionInvoked(_ string) error {
+func (notif *musicPlayerNotif) ActionInvoked(_ string) error {
 	return nil
 }
 
-func (notif *musicNotif) ActivationToken(_ string) error {
+func (notif *musicPlayerNotif) ActivationToken(_ string) error {
 	return nil
 }
 
-func (notif *musicNotif) Data() *NotificationData {
+func (notif *musicPlayerNotif) Data() *NotificationData {
+	return notif.data
+}
+
+func (notif *musicMixerNotif) Name() string {
+	return "MPD Mixer"
+}
+
+func (notif *musicMixerNotif) Closed(_ uint32) error {
+	return nil
+}
+
+func (notif *musicMixerNotif) ActionInvoked(_ string) error {
+	return nil
+}
+
+func (notif *musicMixerNotif) ActivationToken(_ string) error {
+	return nil
+}
+
+func (notif *musicMixerNotif) Data() *NotificationData {
 	return notif.data
 }
 
 func (notifier *music) Init(_ []string) error {
 	var err error
 
-	notifier.socketPath = filepath.Join(os.Getenv("XDG_RUNTIME_DIR"), "mpd/socket")
+	notifier.socketPath, err = xdg.SearchRuntimeFile("mpd/socket")
+	if err != nil {
+		return err
+	}
 
 	notifier.artPath, err = xdg.CacheFile("notifydbus/mpd/albumArt.png")
 	if err != nil {
 		return err
 	}
 
-	notifier.watcher, err = mpd.NewWatcher("unix", notifier.socketPath, "", "player")
+	notifier.watcher, err = mpd.NewWatcher("unix", notifier.socketPath, "", "player", "mixer")
 	if err != nil {
 		return err
 	}
 
-	notifier.notif = &musicNotif{
+	notifier.player = &musicPlayerNotif{
 		data: &NotificationData{
 			AppName:       "notifydbus",
 			ReplacesID:    true,
@@ -68,45 +104,65 @@ func (notifier *music) Init(_ []string) error {
 		},
 	}
 
+	notifier.mixer = &musicMixerNotif{
+		data: &NotificationData{
+			AppName:       "notifydbus",
+			Summary:       "MPD Volume",
+			ReplacesID:    true,
+			ExpireTimeout: -1,
+
+			Hints: map[string]dbus.Variant{
+				"urgency": dbus.MakeVariant(0),
+			},
+		},
+	}
+
 	select {
 	case <-notifier.watcher.Event:
-		return notifier.updateOutput()
+		return notifier.updatePlayer()
 	case err = <-notifier.watcher.Error:
 		return err
 	}
 }
 
 func (notifier *music) Run() (Notification, error) {
-	notifier.notif.data.Summary = notifier.summary
-	notifier.notif.data.Body = notifier.body
-	notifier.notif.data.Hints["image-path"] = dbus.MakeVariant(notifier.artPath)
-
 	return notifier.notif, nil
 }
 
 func (notifier *music) Sleep() error {
-	var err error
+	var (
+		event string
+		err   error
+	)
 
 	select {
-	case <-notifier.watcher.Event:
-		return notifier.updateOutput()
+	case event = <-notifier.watcher.Event:
+		switch event {
+		case "player":
+			return notifier.updatePlayer()
+		case "mixer":
+			return notifier.updateMixer()
+		default:
+			return fmt.Errorf("%s: unexpected MPD event", event)
+		}
 	case err = <-notifier.watcher.Error:
 		return err
 	}
 }
 
 func (notifier *music) Close() error {
-	return nil
+	return notifier.watcher.Close()
 }
 
 func (notifier *music) albumArt(file string) error {
 	return ffmpeg.Input(file).Output(notifier.artPath, ffmpeg.KwArgs{"an": "", "c:v": "copy", "update": "1"}).OverWriteOutput().Silent(true).Run()
 }
 
-func (notifier *music) updateOutput() error {
+func (notifier *music) updatePlayer() error {
 	var (
 		client               *mpd.Client
 		song, status, config mpd.Attrs
+		data                 *NotificationData
 		err                  error
 	)
 
@@ -135,20 +191,62 @@ func (notifier *music) updateOutput() error {
 		return err
 	}
 
+	data = notifier.player.data
+
 	switch status["state"] {
 	case "play":
-		notifier.summary = "Playing"
+		data.Summary = "Playing"
 	case "pause":
-		notifier.summary = "Paused"
+		data.Summary = "Paused"
 	case "stop":
-		notifier.summary = "Stopped"
+		data.Summary = "Stopped"
 	}
 
-	notifier.body = fmt.Sprintf("%s - %s - %s - %s", song["AlbumArtist"], song["Track"], song["Album"], song["Title"])
+	data.Body = regexp.MustCompilePOSIX("%[A-Za-z]+%").ReplaceAllStringFunc(notifier.opts.format, func(key string) string {
+		return song[key[1:len(key)-1]]
+	})
+
+	data.Hints["image-path"] = dbus.MakeVariant(notifier.artPath)
+	notifier.notif = notifier.player
 
 	return client.Close()
 }
 
-func NewMPD() *music {
-	return &music{}
+func (notifier *music) updateMixer() error {
+	var (
+		client *mpd.Client
+		status mpd.Attrs
+		volume int
+		err    error
+	)
+
+	client, err = mpd.Dial("unix", notifier.socketPath)
+	if err != nil {
+		return err
+	}
+
+	status, err = client.Status()
+	if err != nil {
+		return err
+	}
+
+	volume, err = strconv.Atoi(status["volume"])
+	if err != nil {
+		return err
+	}
+
+	notifier.mixer.data.Body = fmt.Sprintf("%s %d%%", icon(notifier.opts.icons[1:], 100, float64(volume)), volume)
+	notifier.mixer.data.Hints["value"] = dbus.MakeVariant(volume)
+	notifier.notif = notifier.mixer
+
+	return client.Close()
+}
+
+func NewMPD(icons []string, format string) *music {
+	return &music{
+		opts: &musicOpts{
+			icons:  icons,
+			format: format,
+		},
+	}
 }

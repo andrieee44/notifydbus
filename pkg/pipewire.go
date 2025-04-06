@@ -24,7 +24,7 @@ type pipeWireNotif struct {
 }
 
 func (notif *pipeWireNotif) Name() string {
-	return "pipeWire"
+	return "PipeWire"
 }
 
 func (notif *pipeWireNotif) Closed(_ uint32) error {
@@ -49,7 +49,7 @@ func (notifier *pipeWire) Init(_ []string) error {
 	notifier.notif = &pipeWireNotif{
 		data: &NotificationData{
 			AppName:       "notifydbus",
-			Summary:       "Volume",
+			Summary:       "PipeWire Volume",
 			ReplacesID:    true,
 			ExpireTimeout: -1,
 
