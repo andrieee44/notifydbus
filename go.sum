@@ -10,6 +10,8 @@ github.com/andrieee44/pwmon v0.0.0-20250402100532-217bb4627db0 h1:iqM8sTEnG/ehJh
 github.com/andrieee44/pwmon v0.0.0-20250402100532-217bb4627db0/go.mod h1:vBCtEXtLHYsA9XM2pVQzwUXPICWrHLMyDbMfITbrcBM=
 github.com/andrieee44/pwmon v0.0.0-20250406071859-de451ca731c9 h1:BUcy37RobYG/ZV9c7KhVCdZKla+A9BPFo5souPYTwhU=
 github.com/andrieee44/pwmon v0.0.0-20250406071859-de451ca731c9/go.mod h1:vBCtEXtLHYsA9XM2pVQzwUXPICWrHLMyDbMfITbrcBM=
+github.com/andrieee44/pwmon v0.0.0-20250408202315-28140f90a6f7 h1:8EjOtsEHnSLAtu9gTnNScc35qVBG4MNC9UyDaL5yYQE=
+github.com/andrieee44/pwmon v0.0.0-20250408202315-28140f90a6f7/go.mod h1:vBCtEXtLHYsA9XM2pVQzwUXPICWrHLMyDbMfITbrcBM=
 github.com/aws/aws-sdk-go v1.38.20/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
 github.com/aws/aws-sdk-go v1.55.6 h1:cSg4pvZ3m8dgYcgqB97MrcdjUmZ1BeMYKUxMMB89IPk=
 github.com/aws/aws-sdk-go v1.55.6/go.mod h1:eRwEWoyTWFMVYVQzKMNHWP5/RV4xIUGMQfXQHfHkpNU=

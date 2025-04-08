@@ -4,7 +4,7 @@ go 1.24.1
 
 require (
 	github.com/adrg/xdg v0.5.3
-	github.com/andrieee44/pwmon v0.0.0-20250406071859-de451ca731c9
+	github.com/andrieee44/pwmon v0.0.0-20250408202315-28140f90a6f7
 	github.com/fhs/gompd/v2 v2.3.0
 	github.com/fsnotify/fsnotify v1.9.0
 	github.com/godbus/dbus/v5 v5.1.0
