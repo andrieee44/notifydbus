@@ -186,9 +186,11 @@ func (notifier *music) updatePlayer() error {
 		return err
 	}
 
-	err = notifier.albumArt(filepath.Join(config["music_directory"], song["file"]))
-	if err != nil {
-		return err
+	if song["file"] != "" {
+		err = notifier.albumArt(filepath.Join(config["music_directory"], song["file"]))
+		if err != nil {
+			return err
+		}
 	}
 
 	data = notifier.player.data
